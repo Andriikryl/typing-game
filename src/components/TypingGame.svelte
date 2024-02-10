@@ -86,4 +86,32 @@
   </div>
 </div>
 
-<style></style>
+<style lang="scss">
+  .words {
+    --line-height: 1em;
+    --lines: 3;
+    width: 100%;
+    max-height: calc(var(--line-height) * var(--lines) * 1.42);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+    position: relative;
+    font-size: 1.5rem;
+    line-height: var(--line-height);
+    overflow: hidden;
+    user-select: none;
+
+    .letter {
+      opacity: 0.4;
+      transition: all 0.3s ease;
+    }
+    &:global(.correct) {
+      opacity: 0.8;
+    }
+
+    &:global(.incorrect) {
+      color: var(--primary);
+      opacity: 1;
+    }
+  }
+</style>
