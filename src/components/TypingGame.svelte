@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tweened } from "svelte/motion";
   type Game = "waiting for input" | "in progress" | "game over";
   type Word = string;
   let game: Game = "waiting for input";
@@ -11,10 +12,31 @@
   let letterEl: HTMLSpanElement;
   let inputEl: HTMLInputElement;
   let caretEl: HTMLDivElement;
+  let seconds = 30;
 
   function startGame() {
     setGameState("in progress");
+    setGameTimer();
   }
+  function setGameTimer() {
+    function gameTimer() {
+      if (seconds > 0) {
+        seconds -= 1;
+      }
+
+      if (game === "waiting for input" || seconds === 0) {
+        clearInterval(interval);
+      }
+
+      if (seconds === 0) {
+        setGameState("game over");
+        getResults();
+      }
+    }
+
+    const interval = setInterval(gameTimer, 1000);
+  }
+
   function nextWord() {
     const isNotFirstLetter = letterIndex !== 0;
     const isOneLetterWord = words[wordIndex].length === 1;
@@ -111,6 +133,7 @@
     class="input"
     type="text"
   />
+  <div class="time">{seconds}</div>
 
   <div bind:this={wordsEl} class="words">
     {#each words as word}
@@ -150,12 +173,6 @@
     overflow: hidden;
     user-select: none;
 
-    .letter {
-      opacity: 0.4;
-      transition: all 0.3s ease;
-    }
-  }
-  .words {
     .game {
       &[data-game="in progress"] .caret {
         animation: none;
@@ -179,6 +196,27 @@
           opacity: 1;
         }
       }
+    }
+
+    .letter {
+      opacity: 0.4;
+      transition: all 0.3s ease;
+    }
+  }
+  .game {
+    position: relative;
+
+    .time {
+      position: absolute;
+      top: -48px;
+      font-size: 1.5rem;
+      color: var(--primary);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    &[data-game="in progress"] .time {
+      opacity: 1;
     }
   }
 </style>
