@@ -27,6 +27,21 @@
       ] as HTMLSpanElement;
     }
   }
+  function checkLetter() {
+    const currentLetter = words[wordIndex][letterIndex];
+
+    if (typedLetter === currentLetter) {
+      letterEl.dataset.letter = "correct";
+      increaseScore();
+    }
+
+    if (typedLetter !== currentLetter) {
+      letterEl.dataset.letter = "incorrect";
+    }
+  }
+  function increaseScore() {
+    correctLetters += 1;
+  }
   function updateGameState() {
     setLetter();
     checkLetter();
