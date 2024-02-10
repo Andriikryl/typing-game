@@ -51,6 +51,14 @@ body {
   background-color: var(--bg-100);
 }
 
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+  }
 
 /* Set shorter line heights on headings and interactive elements */
 h1, h2, h3, h4, h5

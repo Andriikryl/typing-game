@@ -10,14 +10,33 @@
   let wordsEl: HTMLDivElement;
   let letterEl: HTMLSpanElement;
   let inputEl: HTMLInputElement;
+  let caretEl: HTMLDivElement;
 
   function startGame() {
     setGameState("in progress");
+  }
+  function nextWord() {
+    const isNotFirstLetter = letterIndex !== 0;
+    const isOneLetterWord = words[wordIndex].length === 1;
+
+    if (isNotFirstLetter || isOneLetterWord) {
+      wordIndex += 1;
+      letterIndex = 0;
+      increaseScore();
+      moveCaret();
+    }
+  }
+
+  function moveCaret() {
+    const offset = 4;
+    caretEl.style.top = `${letterEl.offsetTop + offset}px`;
+    caretEl.style.left = `${letterEl.offsetLeft + letterEl.offsetWidth}px`;
   }
 
   function setGameState(state: Game) {
     game = state;
   }
+
   function setLetter() {
     const isWordCompleted = letterIndex > words[wordIndex].length - 1;
 
@@ -27,12 +46,7 @@
       ] as HTMLSpanElement;
     }
   }
-  function nextLetter() {
-    letterIndex += 1;
-  }
-  function resetLetter() {
-    typedLetter = "";
-  }
+
   function checkLetter() {
     const currentLetter = words[wordIndex][letterIndex];
 
@@ -45,6 +59,7 @@
       letterEl.dataset.letter = "incorrect";
     }
   }
+
   function increaseScore() {
     correctLetters += 1;
   }
@@ -53,10 +68,32 @@
     checkLetter();
     nextLetter();
     resetLetter();
+    updateLine();
+    moveCaret();
+  }
+
+  function updateLine() {
+    const wordEl = wordsEl.children[wordIndex];
+    const wordsY = wordsEl.getBoundingClientRect().y;
+    const wordY = wordEl.getBoundingClientRect().y;
+
+    if (wordY > wordsY) {
+      wordEl.scrollIntoView({ block: "center" });
+    }
+  }
+  function nextLetter() {
+    letterIndex += 1;
+  }
+
+  function resetLetter() {
+    typedLetter = "";
   }
   function handleKeydown(event: KeyboardEvent) {
     if (event.code === "Space") {
       event.preventDefault();
+      if (game === "in progress") {
+        nextWord();
+      }
     }
 
     if (game === "waiting for input") {
@@ -83,13 +120,25 @@
         {/each}
       </span>
     {/each}
+    <div bind:this={caretEl} class="caret" />
   </div>
 </div>
 
+<!-- ... -->
+
 <style lang="scss">
+  :global([data-letter="correct"]) {
+    opacity: 0.8;
+  }
+
+  :global([data-letter="incorrect"]) {
+    color: var(--primary);
+    opacity: 1;
+  }
   .words {
     --line-height: 1em;
     --lines: 3;
+
     width: 100%;
     max-height: calc(var(--line-height) * var(--lines) * 1.42);
     display: flex;
@@ -105,13 +154,31 @@
       opacity: 0.4;
       transition: all 0.3s ease;
     }
-    &:global(.correct) {
-      opacity: 0.8;
+  }
+  .words {
+    .game {
+      &[data-game="in progress"] .caret {
+        animation: none;
+      }
     }
 
-    &:global(.incorrect) {
-      color: var(--primary);
-      opacity: 1;
+    .caret {
+      position: absolute;
+      height: 1.8rem;
+      top: 0;
+      border-right: 1px solid var(--primary);
+      animation: caret 1s infinite;
+      transition: all 0.2s ease;
+
+      @keyframes caret {
+        0%,
+        to {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
     }
   }
 </style>
