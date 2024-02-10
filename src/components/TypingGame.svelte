@@ -14,7 +14,13 @@
     // ...
   }
   function handleKeydown(event: KeyboardEvent) {
-    // ...
+    if (event.code === "Space") {
+      event.preventDefault();
+    }
+
+    if (game === "waiting for input") {
+      startGame();
+    }
   }
 </script>
 
