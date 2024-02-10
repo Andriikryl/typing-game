@@ -27,6 +27,9 @@
       ] as HTMLSpanElement;
     }
   }
+  function nextLetter() {
+    letterIndex += 1;
+  }
   function checkLetter() {
     const currentLetter = words[wordIndex][letterIndex];
 
