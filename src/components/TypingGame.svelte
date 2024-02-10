@@ -10,10 +10,33 @@
   let wordsEl: HTMLDivElement;
   let letterEl: HTMLSpanElement;
   let inputEl: HTMLInputElement;
+  function updateGameState() {
+    // ...
+  }
+  function handleKeydown(event: KeyboardEvent) {
+    // ...
+  }
 </script>
 
-<div>
-  <h1>typing game</h1>
+<div class="game" data-game={game}>
+  <input
+    bind:this={inputEl}
+    bind:value={typedLetter}
+    on:input={updateGameState}
+    on:keydown={handleKeydown}
+    class="input"
+    type="text"
+  />
+
+  <div bind:this={wordsEl} class="words">
+    {#each words as word}
+      <span class="word">
+        {#each word as letter}
+          <span class="letter">{letter}</span>
+        {/each}
+      </span>
+    {/each}
+  </div>
 </div>
 
 <style></style>
