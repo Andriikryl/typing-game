@@ -13,11 +13,34 @@
   let inputEl: HTMLInputElement;
   let caretEl: HTMLDivElement;
   let seconds = 30;
+  let wordsPerMinute = tweened(0, { delay: 300, duration: 1000 });
+  let accuracy = tweened(0, { delay: 1300, duration: 1000 });
 
   function startGame() {
     setGameState("in progress");
     setGameTimer();
   }
+
+  function getWordsPerMinute() {
+    const word = 5;
+    const minutes = 0.5;
+    return Math.floor(correctLetters / word / minutes);
+  }
+
+  function getResults() {
+    $wordsPerMinute = getWordsPerMinute();
+    $accuracy = getAccuracy();
+  }
+
+  function getAccuracy() {
+    const totalLetters = getTotalLetters(words);
+    return Math.floor((correctLetters / totalLetters) * 100);
+  }
+
+  function getTotalLetters(words: Word[]) {
+    return words.reduce((count, word) => count + word.length, 0);
+  }
+
   function setGameTimer() {
     function gameTimer() {
       if (seconds > 0) {
