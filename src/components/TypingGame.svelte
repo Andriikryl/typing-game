@@ -30,6 +30,9 @@
   function nextLetter() {
     letterIndex += 1;
   }
+  function resetLetter() {
+    typedLetter = "";
+  }
   function checkLetter() {
     const currentLetter = words[wordIndex][letterIndex];
 
