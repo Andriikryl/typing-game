@@ -18,8 +18,20 @@
   function setGameState(state: Game) {
     game = state;
   }
+  function setLetter() {
+    const isWordCompleted = letterIndex > words[wordIndex].length - 1;
+
+    if (!isWordCompleted) {
+      letterEl = wordsEl.children[wordIndex].children[
+        letterIndex
+      ] as HTMLSpanElement;
+    }
+  }
   function updateGameState() {
-    // ...
+    setLetter();
+    checkLetter();
+    nextLetter();
+    resetLetter();
   }
   function handleKeydown(event: KeyboardEvent) {
     if (event.code === "Space") {
