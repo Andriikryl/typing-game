@@ -147,28 +147,43 @@
   }
 </script>
 
-<div class="game" data-game={game}>
-  <input
-    bind:this={inputEl}
-    bind:value={typedLetter}
-    on:input={updateGameState}
-    on:keydown={handleKeydown}
-    class="input"
-    type="text"
-  />
-  <div class="time">{seconds}</div>
+{#if game !== "game over"}
+  <div class="game" data-game={game}>
+    <input
+      bind:this={inputEl}
+      bind:value={typedLetter}
+      on:input={updateGameState}
+      on:keydown={handleKeydown}
+      class="input"
+      type="text"
+    />
+    <div class="time">{seconds}</div>
 
-  <div bind:this={wordsEl} class="words">
-    {#each words as word}
-      <span class="word">
-        {#each word as letter}
-          <span class="letter">{letter}</span>
-        {/each}
-      </span>
-    {/each}
-    <div bind:this={caretEl} class="caret" />
+    <div bind:this={wordsEl} class="words">
+      {#each words as word}
+        <span class="word">
+          {#each word as letter}
+            <span class="letter">{letter}</span>
+          {/each}
+        </span>
+      {/each}
+      <div bind:this={caretEl} class="caret" />
+    </div>
   </div>
-</div>
+{/if}
+{#if game === "game over"}
+  <div class="results">
+    <div>
+      <p class="title">wpm</p>
+      <p class="score">{Math.trunc($wordsPerMinute)}</p>
+    </div>
+
+    <div>
+      <p class="title">accuracy</p>
+      <p class="score">{Math.trunc($accuracy)}%</p>
+    </div>
+  </div>
+{/if}
 
 <!-- ... -->
 
@@ -240,6 +255,21 @@
 
     &[data-game="in progress"] .time {
       opacity: 1;
+    }
+  }
+  .results {
+    .title {
+      font-size: 2rem;
+      color: var(--fg-200);
+    }
+
+    .score {
+      font-size: 4rem;
+      color: var(--primary);
+    }
+
+    .play {
+      margin-top: 1rem;
     }
   }
 </style>
