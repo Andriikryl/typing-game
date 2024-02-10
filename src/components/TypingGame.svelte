@@ -10,6 +10,14 @@
   let wordsEl: HTMLDivElement;
   let letterEl: HTMLSpanElement;
   let inputEl: HTMLInputElement;
+
+  function startGame() {
+    setGameState("in progress");
+  }
+
+  function setGameState(state: Game) {
+    game = state;
+  }
   function updateGameState() {
     // ...
   }
